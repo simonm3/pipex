@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-  # TODO add registr_dev and production?
   # Note: requires .env file with POSTGRES_USER and POSTGRES_PASSWORD
 
   orion:
@@ -27,11 +26,13 @@ services:
     ports:
       - 5432:5432
     restart: always
+
   # temporary container to create storage
-  # orion_setup:
-  #   image: registry.gitlab.com/libdemsoftware/registr/orion
-  #   container_name: orion_setup
-  #   depends_on:
-  #     - orion
-  #   command: sh orion_setup.sh
-  #   restart: "no"
+  orion_setup:
+    image: registry.gitlab.com/libdemsoftware/registr/orion
+    container_name: orion_setup
+    depends_on:
+      - orion
+    command: sh orion_setup.sh
+    # in quotes as no gets read as False
+    restart: "no"

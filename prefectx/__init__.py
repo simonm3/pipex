@@ -9,6 +9,11 @@ import re
 
 log = logging.getLogger(__name__)
 
+logpath = os.path.abspath(os.path.join(__file__, os.pardir, "logging.yml"))
+os.environ.setdefault("PREFECT_ORION_DATABASE_CONNECTION_TIMEOUT", "60.0")
+os.environ.setdefault("PREFECT_LOGGING_SETTINGS_PATH", logpath)
+os.environ.setdefault("PREFECT_API_URL", "http://127.0.0.1:4200/api")
+
 gcontext = {}
 
 # TODO remove when dask bug fixed https://github.com/dask/distributed/issues/5971
@@ -29,7 +34,10 @@ def keepalive():
 # TODO ideally dask or prefect will do this automatically
 def setup_dask_logging():
     # read log settings
-    with open(os.environ["PREFECT_LOGGING_SETTINGS_PATH"]) as f:
+    logpath = os.environ.get(
+        "PREFECT_LOGGING_SETTINGS_PATH", f"{prefect.logging.__path__[0]}/logging.yml"
+    )
+    with open(logpath) as f:
         logset = f.read()
     for x in set(re.findall("\${.*}", logset)):
         logset = logset.replace(x, os.environ.get(x[2:-1], "INFO"))
@@ -57,6 +65,7 @@ def setup_dask_logging():
 
 
 #####################################################################
+
 
 def do_nothing(fn=None, **kwargs):
     """ dummy decorator e.g. for @task, @flow """
