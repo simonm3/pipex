@@ -76,13 +76,18 @@ class Cache:
         return self.store(target, data)
 
 
-def task(fn=None, target: str = None, store: Store = Filestore, **kwargs):
+def task(fn=None,
+         target: str = None,
+         store: Store = Filestore, 
+         **kwargs):
     """
     decorator to wrap function in cache.
     return target if exists; load inputs from Stores; save output to target; return Store(target)
 
     :param target: template string for target file
-    :para store: what to return. default=FileStore. None=raw data.
+    :param store: what to return. default=FileStore. None=raw data.
+    :param kwargs: prefect kwargs that will be ignored.
+
     """
     if fn:
         del kwargs
