@@ -13,14 +13,14 @@ from prefect.orion.schemas.states import Completed
 from prefect.context import get_run_context
 
 from . import gcontext
-from .stores import Store, Filestore
+from .store import Store, Filestore
 from .cache import Cache
 
 log = logging.getLogger("prefect.prefectx")
 
 
 class CacheFunc(Cache):
-    """ decorator to wrap embedded function
+    """decorator to wrap embedded function
     resolve target in CacheTask.__call__ before submission not Func.__call__ at remote execution time.
     """
 
@@ -48,8 +48,9 @@ class CacheTask(Task):
         if self.skip and os.path.isfile(target):
             future = Skipped(self.fn.store(target))
         else:
-            # copy so can amend without risk of concurrency errors
+            # copy to allow multiple calls in ConcurrentTaskRunner
             copy1 = deepcopy(self)
+            # fill func task template onSubmit not onExecute
             copy1.fn.target = target
             copy1.name = self.fn.fill_template(self.name, *args, **kwargs)
             future = copy1.submit(*args, wait_for=wait_for, **kwargs)

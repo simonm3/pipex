@@ -5,7 +5,7 @@ import inspect
 import os
 import datetime
 from . import gcontext
-from .stores import Filestore, Store
+from .store import Filestore, Store
 
 log = logging.getLogger("prefect.prefectx")
 
