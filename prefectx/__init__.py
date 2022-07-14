@@ -48,5 +48,4 @@ else:
 # workarounds
 if task_type.startswith("prefect"):
     keepalive()
-    # TODO
-    # setup_dask_logging()
+    setup_dask_logging()
