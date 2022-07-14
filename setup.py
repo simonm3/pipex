@@ -9,11 +9,12 @@ from setuptools import setup
 params = dict(
     name='prefectx',
     description='prefectx',
-    version='0.0.0',
-    url='',
+    version='1.0.0',
+    url='http://github.com/simonm3/prefectx.git',
     install_requires=['prefect', 'PyYAML'],
     packages=['prefectx'],
-    package_data={},
+    package_data={'prefectx': [
+        'logging.yml', 'logging_daskdistributed.yaml', 'logging_default.yml']},
     include_package_data=True,
     py_modules=[],
     scripts=None)
