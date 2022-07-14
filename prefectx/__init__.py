@@ -28,7 +28,7 @@ if task_type == "function":
 elif task_type == "cache":
     from .cache import task
 elif task_type == "prefect":
-    from prefect.tasks import task
+    from prefect import task
 elif task_type == "prefect.cache":
     from .prefect import task
 
@@ -41,7 +41,7 @@ log.info(f"{task_type} will be used to control task flows")
 
 # set behaviour of @flow depending on task_type
 if task_type.startswith("prefect"):
-    from prefect.flows import flow
+    from prefect import flow
 else:
     flow = do_nothing
 
