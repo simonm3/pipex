@@ -16,7 +16,10 @@ def load_config():
         gconfig = yaml.safe_load(f.read())
     gconfig = dotdict(gconfig)
     gcontext = gconfig.get("gcontext", dotdict())
-    gsettings = gconfig.get("gsetttings", dotdict())
+    gsettings = gconfig.get("gsettings", dotdict())
+    log.info(gconfig)
+    log.info(gcontext)
+    log.info(gsettings)
 
 
 # dummy decorator
@@ -26,9 +29,11 @@ def do_nothing(fn=None, **kwargs):
 
 # load global context and settings
 load_config()
+log.info(gcontext)
+log.info(gsettings)
 
 # @task behaviour
-task_type = os.environ.get("PIPEX")
+task_type = os.environ.get("PIPEX", gsettings.pipex)
 if task_type == "do_nothing":
     tasks = do_nothing
     flow = do_nothing
