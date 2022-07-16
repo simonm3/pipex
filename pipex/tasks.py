@@ -1,13 +1,13 @@
-import logging
-from functools import partial
-import os
-import inspect
-import os
 import datetime
-from . import gcontext
+import inspect
+import logging
+import os
+from functools import partial
+
+from . import gcontext, gsettings
 from .store import Filestore, Store
 
-log = logging.getLogger("prefect.prefectx")
+log = logging.getLogger("prefect.pipex")
 
 
 # TODO what else could be useful in target fstring?
@@ -20,9 +20,9 @@ def f(fstring, kwargs):
     return eval(f"f'{fstring}'", modules, kwargs)
 
 
-class Cache:
+class Task:
     """
-    class decorator
+    class decorator. use @task function to create
     return target if exists; load inputs from Stores; save output to target; return Store(target)
 
     :param target: template string for target file
@@ -31,17 +31,21 @@ class Cache:
 
     def __init__(self, fn, target=None, store=None):
         self.fn = fn
-        # base can be from args/kwargs or context
-        self.target = target or "working/{funcname}/{base}"
+        # target will be filled at runtime using args/kwargs, funcname, gcontext
+        self.target = target or gsettings["target_template"]
         self.store = store or Filestore
 
     def __call__(self, *args, **kwargs):
         target = self.fill_template(self.target, *args, **kwargs)
-        if os.path.exists(target):
-            return self.store(target)
+        if self.store:
+            target = self.store(target)
+            if target.exists():
+                return target
         data = self.run(*args, **kwargs)
-        result = self.get_result(data, target)
-        return result
+        if self.store:
+            target.save(data)
+            return target
+        return data
 
     def fill_template(self, template, *args, **kwargs):
         """fill template using args/kwargs, funcname, gcontext"""
@@ -70,28 +74,24 @@ class Cache:
 
         return data
 
-    def get_result(self, data, target):
-        if self.store is None:
-            return target
-        return self.store(target, data)
 
-
-def task(fn=None,
-         target: str = None,
-         store: Store = Filestore, 
-         **kwargs):
+def task(
+    fn=None,
+    target: str = None,
+    store: Store = Filestore,
+    **kwargs,
+):
     """
-    decorator to wrap function in cache.
+    decorator to wrap function with cache
     return target if exists; load inputs from Stores; save output to target; return Store(target)
 
     :param target: template string for target file
     :param store: what to return. default=FileStore. None=raw data.
-    :param kwargs: prefect kwargs that will be ignored.
-
+    :param kwargs: ignored e.g. ignores any kwargs used only by prefect or pipex.prefect
     """
     if fn:
         del kwargs
-        return Cache(**locals())
+        return Task(**locals())
     else:
         # enable default parameters to be set before decorator called
         del fn

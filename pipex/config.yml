@@ -1,0 +1,5 @@
+gcontext:
+  path: working
+  base: ""
+gsettings:
+  target_template: "{path}/{funcname}/{base}"

@@ -10,12 +10,8 @@ class Store:
     e.g. pickle file, database
     """
 
-    def __init__(self, loc=None, data=None):
-        if loc is None:
-            raise Exception("Must provide a location for data")
+    def __init__(self, loc):
         self.loc = loc
-        if data is not None:
-            self.save(data)
 
     def save(self, data):
         raise NotImplementedError
@@ -42,4 +38,7 @@ class Filestore(Store):
 
     def load(self):
         return pickle.load(open(self.loc, "rb"))
+
+    def exists(self):
+        return os.path.isfile(self.loc)
 

@@ -7,17 +7,17 @@ overwritten when autogen is rerun.
 from setuptools import setup
 
 params = dict(
-    name='prefectx',
-    description='prefectx',
-    version='1.0.0',
-    url='http://github.com/simonm3/prefectx.git',
-    install_requires=['prefect', 'PyYAML'],
-    packages=['prefectx'],
-    package_data={'prefectx': [
-        'logging.yml', 'logging_daskdistributed.yaml', 'logging_default.yml']},
+    name="pipex",
+    description="pipex",
+    version="1.0.0",
+    url="http://github.com/simonm3/pipex.git",
+    install_requires=["prefect", "PyYAML"],
+    packages=["pipex", "pipex.prefect"],
+    package_data={},
     include_package_data=True,
     py_modules=[],
-    scripts=None)
+    scripts=None,
+)
 
 ########## EDIT BELOW THIS LINE ONLY ##########
 
