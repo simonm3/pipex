@@ -1,2 +1,2 @@
-PyYAML==6.0
 prefect==2.0b7
+PyYAML==6.0

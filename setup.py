@@ -9,9 +9,9 @@ from setuptools import setup
 params = dict(
     name='pipex',
     description='Purpose',
-    version='8.0.0',
+    version='1.0.0',
     url='http://github.com/simonm3/pipex.git',
-    install_requires=['PyYAML', 'prefect'],
+    install_requires=['prefect', 'PyYAML'],
     packages=['pipex', 'pipex.prefect'],
     package_data={'pipex': ['config.yml'], 'pipex/prefect': ['logging.yml',
                                                              'logging_daskdistributed.yaml', 'logging_default.yml']},

@@ -17,9 +17,6 @@ def load_config():
     gconfig = dotdict(gconfig)
     gcontext = gconfig.get("gcontext", dotdict())
     gsettings = gconfig.get("gsettings", dotdict())
-    log.info(gconfig)
-    log.info(gcontext)
-    log.info(gsettings)
 
 
 # dummy decorator
@@ -29,8 +26,6 @@ def do_nothing(fn=None, **kwargs):
 
 # load global context and settings
 load_config()
-log.info(gcontext)
-log.info(gsettings)
 
 # @task behaviour
 task_type = os.environ.get("PIPEX", gsettings.pipex)
